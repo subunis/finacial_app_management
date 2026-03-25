@@ -1,0 +1,25 @@
+name: Finanace CI/CD
+on:
+ push:
+  branch:["master"]
+jobs:
+ build:
+  runs-on: ubuntu-latest
+  steps: 
+  
+  - name: Checkout Code
+    uses: action/checkout@v3
+  
+  - name: Set up Java
+    uses: action/setup-java@v3
+    with:
+      distribution: 'temurin'
+      java-version: '17'
+  - name: Build with Maven
+    run: mvn clean package
+
+  - name: Build Docker image
+    run: docker build -t finance-app .
+
+  - name: Run Conatiner
+    run: docker run -d -p 8080:8080 finance-app
