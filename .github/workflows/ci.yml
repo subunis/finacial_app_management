@@ -1,26 +1,32 @@
-name: Finanace CI/CD
+name: Finance CI/CD
+
 on:
- push:
-  branches:
-    - master
+  push:
+    branches:
+      - master   # change if your branch is main
+
 jobs:
- build:
-  runs-on: ubuntu-latest
-  steps: 
-  
-  - name: Checkout Code
-    uses: action/checkout@v3
-  
-  - name: Set up Java
-    uses: action/setup-java@v3
-    with:
-      distribution: 'temurin'
-      java-version: '17'
-  - name: Build with Maven
-    run: mvn clean package
+  build:
+    runs-on: ubuntu-latest
 
-  - name: Build Docker image
-    run: docker build -t finance-app .
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  - name: Run Conatiner
-    run: docker run -d -p 8080:8080 finance-app
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Build Docker Image
+        run: docker build -t finance-app .
+
+      - name: Run Container
+        run: docker run -d finance-app
+
+      - name: Check Running Containers
+        run: docker ps
